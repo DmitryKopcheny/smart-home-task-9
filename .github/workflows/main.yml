@@ -1,0 +1,44 @@
+name: Arduino Build
+on: [push]
+jobs:
+ build:
+   runs-on: ubuntu-latest
+   steps:
+    - name: Checkout repository
+      uses:  actions/checkout@v4
+
+    - name: Compile sketch for project_7_adjusting_motor_servo_angle Arduino UNO
+      uses: arduino/compile-sketches@v1
+      with:
+        fqbn: arduino:avr:uno
+        sketch-paths: |
+          project_7_adjusting_motor_servo_angle
+        libraries: |
+          - name: "Servo"
+        cli-compile-flags: |
+          - --export-binaries
+
+    - name: Compile sketch for project_8_fan_module Arduino UNO
+      uses: arduino/compile-sketches@v1
+      with:
+        fqbn: arduino:avr:uno
+        sketch-paths: |
+          project_8_fan_module
+        cli-compile-flags: |
+          - --export-binaries
+
+    - name: Upload compiled project_7_adjusting_motor_servo_angle HEX artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: project_7_adjusting_motor_servo_angle
+        path: |
+          project_7_adjusting_motor_servo_angle/build/arduino.avr.uno/*.hex
+        retention-days: 30
+    
+    - name: Upload compiled project_8_fan_module HEX artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: project_8_fan_module
+        path: |
+          project_8_fan_module/build/arduino.avr.uno/*.hex
+        retention-days: 30
